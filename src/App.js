@@ -4,8 +4,11 @@ import { useState } from 'react';
 import Header from './components/Header.js'
 import Tasks from './components/Tasks.js'
 import NewTask from './components/NewTask.js'
+import Clock from './components/Clock.js'
 
+import Draggable, {DraggableCore} from 'react-draggable';
 
+let idCount = 100;
 
 function App() {
 
@@ -27,7 +30,7 @@ function App() {
         },
         {
             id : 3,
-            text : 'Concert with love',
+            text : 'Concert',
             day : 'June 22nd at 20:00',
             important: false,
         },
@@ -43,8 +46,8 @@ function App() {
   }
 
   const newTask = (task) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-    //note to self, be careful. Theoretically, could result with identical IDs 0.01% chance.
+    idCount += 1;
+    const id = idCount;
     
     const createdTask = { id, ...task };
     setTasks([...tasks, createdTask]);
@@ -53,16 +56,28 @@ function App() {
 
 
   return (
-    <div className="App">
-      <div className="container">
-        <Header onAdd={()=> setShowTaskAdd(!showTaskAdd)} showTaskAdd={showTaskAdd} className="header" title="Task Tracker"/>
-        {showTaskAdd && <NewTask onAdd={newTask}/>}
-        {tasks.length > 0 ?
-          <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleImportant}/>
-          : 'You do not seem to be doing much, consider adding some tasks.'
-        }
+      <div className="App">
+        <Draggable>
+          <div className="container">
+            <Header onAdd={()=> setShowTaskAdd(!showTaskAdd)} showTaskAdd={showTaskAdd} className="header" title="Task Tracker"/>
+            {showTaskAdd && <NewTask onAdd={newTask}/>}
+            {tasks.length > 0 ?
+              <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleImportant}/>
+              : 'You do not seem to be doing much, consider adding some tasks.'
+            }
+          </div>
+        </Draggable>
+        <Draggable>
+          <div className="container">
+            <Clock></Clock>
+          </div>
+        </Draggable>
+        <Draggable>
+          <div className="container">
+            <img className="banana" src='https://c.tenor.com/ZgbW9V5PKoMAAAAM/banana-dance-dancing-banana.gif'/>
+          </div>
+        </Draggable>
       </div>
-    </div>
   );
 }
 
